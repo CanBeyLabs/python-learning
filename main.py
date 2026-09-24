@@ -1,41 +1,36 @@
 import requests
 
+username = input("GitHub kullanıcı adı: ")
 
-def github_kullanici_getir(kullanici):
-    url = f"https://api.github.com/users/{kullanici}"
+url = f"https://api.github.com/users/{username}"
+response = requests.get(url)
 
-    try:
-        cevap = requests.get(url, timeout=10)
+if response.status_code == 200:
 
-        if cevap.status_code == 200:
-            return cevap.json()
+    data = response.json()
 
-        elif cevap.status_code == 404:
-            return None
+    print("\n===== GITHUB RAPORU =====")
+    print("Kullanıcı:", data["login"])
+    print("Takipçi:", data["followers"])
+    print("Takip edilen:", data["following"])
+    print("Public repo:", data["public_repos"])
+    print("Profil:", data["html_url"])
 
-        else:
-            print("API hata kodu:", cevap.status_code)
-            return None
+    repos_url = f"https://api.github.com/users/{username}/repos"
+    repos_response = requests.get(repos_url)
 
-    except requests.exceptions.RequestException:
-        print("İnternet bağlantısında sorun oluştu.")
-        return None
+    if repos_response.status_code == 200:
 
+        repos = repos_response.json()
 
-def bilgileri_goster(veri):
-    print("\n--- GITHUB BİLGİLERİ ---")
-    print("Kullanıcı:", veri["login"])
-    print("Profil:", veri["html_url"])
-    print("Takipçi:", veri["followers"])
-    print("Takip edilen:", veri["following"])
-    print("Public repo:", veri["public_repos"])
+        print("\n===== REPOLAR =====")
 
+        for repo in repos:
+            print(
+                "-", repo["name"],
+                "| ⭐", repo["stargazers_count"],
+                "| Fork:", repo["forks_count"]
+            )
 
-kullanici = input("GitHub kullanıcı adı: ")
-
-veri = github_kullanici_getir(kullanici)
-
-if veri is not None:
-    bilgileri_goster(veri)
 else:
     print("Kullanıcı bulunamadı.")
