@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="tr">
 
 <head>
@@ -15,251 +14,447 @@
         LocalAI Website Audit
     </title>
 
-
     <style>
 
         * {
             box-sizing: border-box;
         }
 
-
         body {
 
             margin: 0;
 
-            font-family: Arial, sans-serif;
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
 
-            background: #f4f6f8;
+            background:
+                linear-gradient(
+                    135deg,
+                    #eef2ff,
+                    #f8fafc
+                );
 
-            color: #111827;
+            color: #172033;
         }
-
 
         .container {
 
-            width: 92%;
+            width: 94%;
+            max-width: 1100px;
 
-            max-width: 800px;
+            margin: 40px auto;
+        }
 
-            margin: 50px auto;
+        .hero {
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #111827,
+                    #2563eb
+                );
+
+            color: white;
+
+            border-radius: 24px;
+
+            padding: 42px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 20px 50px
+                rgba(0,0,0,.15);
+        }
+
+        .hero h1 {
+
+            margin: 0 0 12px;
+
+            font-size: 42px;
+        }
+
+        .hero p {
+
+            margin: 0;
+
+            font-size: 18px;
+
+            opacity: .9;
+        }
+
+        .card {
 
             background: white;
 
-            padding: 40px;
+            border-radius: 20px;
 
-            border-radius: 18px;
+            padding: 28px;
+
+            margin-bottom: 25px;
 
             box-shadow:
-                0 10px 35px
-                rgba(0,0,0,0.08);
+                0 10px 30px
+                rgba(15,23,42,.08);
         }
 
+        .form-grid {
 
-        h1 {
+            display: grid;
 
-            text-align: center;
+            grid-template-columns:
+                repeat(2, 1fr);
 
-            font-size: 32px;
+            gap: 18px;
+        }
+
+        .field {
+
+            display: flex;
+
+            flex-direction: column;
+        }
+
+        .field.full {
+
+            grid-column:
+                1 / -1;
+        }
+
+        label {
+
+            font-weight: bold;
 
             margin-bottom: 8px;
         }
 
-
-        .aciklama {
-
-            text-align: center;
-
-            color: #6b7280;
-
-            margin-bottom: 35px;
-        }
-
-
-        label {
-
-            display: block;
-
-            font-weight: bold;
-
-            margin-top: 18px;
-
-            margin-bottom: 7px;
-        }
-
-
         input {
-
-            width: 100%;
-
-            padding: 14px;
-
-            border:
-                1px solid #d1d5db;
-
-            border-radius: 9px;
-
-            font-size: 15px;
-        }
-
-
-        input:focus {
-
-            outline: none;
-
-            border-color: #111827;
-        }
-
-
-        button {
-
-            width: 100%;
-
-            margin-top: 25px;
 
             padding: 15px;
 
+            border:
+                1px solid #dbe1ea;
+
+            border-radius: 12px;
+
+            font-size: 15px;
+
+            outline: none;
+        }
+
+        input:focus {
+
+            border-color:
+                #2563eb;
+
+            box-shadow:
+                0 0 0 3px
+                rgba(37,99,235,.1);
+        }
+
+        button {
+
             border: none;
 
-            border-radius: 9px;
+            border-radius: 12px;
 
-            background: #111827;
-
-            color: white;
+            padding: 16px 22px;
 
             font-size: 16px;
 
             font-weight: bold;
 
             cursor: pointer;
+
+            transition: .2s;
         }
 
-
-        button:hover {
-
-            background: #000000;
-        }
-
-
-        .sonuc {
-
-            margin-top: 35px;
-
-            padding: 25px;
-
-            background: #f9fafb;
-
-            border-radius: 14px;
-
-            border:
-                1px solid #e5e7eb;
-        }
-
-
-        .puan {
-
-            text-align: center;
-
-            font-size: 52px;
-
-            font-weight: bold;
-
-            margin: 25px 0;
-        }
-
-
-        .durum {
-
-            text-align: center;
-
-            font-size: 18px;
-
-            font-weight: bold;
-
-            margin-bottom: 25px;
-        }
-
-
-        .bilgi {
-
-            padding: 18px;
-
-            background: white;
-
-            border-radius: 10px;
-
-            margin-bottom: 25px;
-
-            line-height: 1.6;
-        }
-
-
-        .kontrol {
-
-            padding: 12px;
-
-            margin: 7px 0;
-
-            background: white;
-
-            border-radius: 7px;
-
-            border:
-                1px solid #e5e7eb;
-        }
-
-
-        .oneri {
-
-            padding: 13px;
-
-            margin: 7px 0;
-
-            background: white;
-
-            border-radius: 7px;
-
-            border-left:
-                4px solid #111827;
-        }
-
-
-        .pdf-button {
+        .primary {
 
             background: #2563eb;
 
-            margin-top: 30px;
+            color: white;
+
+            width: 100%;
         }
 
-
-        .pdf-button:hover {
+        .primary:hover {
 
             background: #1d4ed8;
+
+            transform:
+                translateY(-1px);
         }
 
-
-        .hata {
-
-            padding: 15px;
+        .danger {
 
             background: #fee2e2;
 
             color: #991b1b;
 
-            border-radius: 10px;
+            padding: 15px;
 
-            margin-top: 20px;
+            border-radius: 12px;
+
+            margin-bottom: 20px;
         }
 
+        .result-header {
 
-        h2 {
+            display: flex;
 
-            margin-top: 0;
+            justify-content:
+                space-between;
+
+            align-items: center;
+
+            gap: 20px;
+
+            flex-wrap: wrap;
         }
 
+        .score {
 
-        h3 {
+            width: 150px;
+            height: 150px;
+
+            border-radius: 50%;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #2563eb,
+                    #7c3aed
+                );
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            flex-direction: column;
+
+            box-shadow:
+                0 15px 35px
+                rgba(37,99,235,.25);
+        }
+
+        .score strong {
+
+            font-size: 40px;
+        }
+
+        .score span {
+
+            font-size: 13px;
+        }
+
+        .status {
+
+            display: inline-block;
+
+            padding: 8px 14px;
+
+            border-radius: 999px;
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+            font-weight: bold;
+        }
+
+        .metrics {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(5, 1fr);
+
+            gap: 15px;
 
             margin-top: 25px;
+        }
+
+        .metric {
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            text-align: center;
+        }
+
+        .metric strong {
+
+            display: block;
+
+            font-size: 28px;
+
+            margin-top: 8px;
+        }
+
+        .progress {
+
+            height: 8px;
+
+            background: #e5e7eb;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            margin-top: 12px;
+        }
+
+        .progress div {
+
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #2563eb,
+                    #7c3aed
+                );
+        }
+
+        .checks {
+
+            display: grid;
+
+            gap: 10px;
+        }
+
+        .check {
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 10px;
+
+            padding: 13px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+        }
+
+        .ok {
+
+            color: #16a34a;
+
+            font-weight: bold;
+        }
+
+        .bad {
+
+            color: #dc2626;
+
+            font-weight: bold;
+        }
+
+        .recommendation {
+
+            padding: 15px;
+
+            margin-bottom: 10px;
+
+            border-left:
+                4px solid #2563eb;
+
+            background: #f8fafc;
+
+            border-radius:
+                0 10px 10px 0;
+        }
+
+        .seo-box {
+
+            background: #f8fafc;
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 14px;
+
+            padding: 18px;
+
+            margin-bottom: 14px;
+        }
+
+        .seo-label {
+
+            font-weight: bold;
+
+            color: #2563eb;
+
+            margin-bottom: 8px;
+        }
+
+        .pdf-button {
+
+            background: #111827;
+
+            color: white;
+
+            width: 100%;
+
+            margin-top: 10px;
+        }
+
+        .footer {
+
+            text-align: center;
+
+            color: #64748b;
+
+            padding: 30px;
+        }
+
+        @media (max-width: 800px) {
+
+            .form-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .metrics {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+            .hero h1 {
+
+                font-size: 30px;
+            }
+        }
+
+        @media (max-width: 500px) {
+
+            .metrics {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+            .container {
+
+                width: 96%;
+            }
         }
 
     </style>
@@ -273,299 +468,456 @@
 <div class="container">
 
 
-    <h1>
-        LocalAI Website Audit
-    </h1>
+    <div class="hero">
+
+        <h1>
+            LocalAI Website Audit
+        </h1>
+
+        <p>
+            Yerel işletmeler için profesyonel
+            web sitesi, SEO ve Local SEO analiz sistemi.
+        </p>
+
+    </div>
 
 
-    <p class="aciklama">
-        İşletmenizin web sitesini analiz edin.
-    </p>
+    <div class="card">
 
 
-    <!-- ANALİZ FORMU -->
+        {% if hata %}
 
-    <form method="POST">
-
-
-        <label>
-            İşletme Adı
-        </label>
-
-
-        <input
-            type="text"
-            name="isletme_adi"
-            placeholder="Örn: Yalav Elektrik"
-            required
-        >
-
-
-        <label>
-            Sektör
-        </label>
-
-
-        <input
-            type="text"
-            name="sektor"
-            placeholder="Örn: Elektrikçi"
-            required
-        >
-
-
-        <label>
-            Şehir
-        </label>
-
-
-        <input
-            type="text"
-            name="sehir"
-            placeholder="Örn: İstanbul"
-            required
-        >
-
-
-        <label>
-            Web Sitesi
-        </label>
-
-
-        <input
-            type="text"
-            name="website"
-            placeholder="www.ornek.com"
-            required
-        >
-
-
-        <button type="submit">
-
-            WEBSITEYI ANALIZ ET
-
-        </button>
-
-
-    </form>
-
-
-    <!-- SONUÇ -->
-
-    {% if sonuc %}
-
-
-    <div class="sonuc">
-
-
-        <h2>
-            Analiz Sonucu
-        </h2>
-
-
-        <div class="bilgi">
-
-
-            <strong>
-                İşletme:
-            </strong>
-
-            {{ sonuc.isletme_adi }}
-
-
-            <br>
-
-
-            <strong>
-                Sektör:
-            </strong>
-
-            {{ sonuc.sektor }}
-
-
-            <br>
-
-
-            <strong>
-                Şehir:
-            </strong>
-
-            {{ sonuc.sehir }}
-
-
-            <br>
-
-
-            <strong>
-                Website:
-            </strong>
-
-            {{ sonuc.url }}
-
-
+        <div class="danger">
+            {{ hata }}
         </div>
-
-
-        {% if sonuc.aktif %}
-
-
-        <!-- PUAN -->
-
-        <div class="puan">
-
-            {{ sonuc.puan }}/100
-
-        </div>
-
-
-        <div class="durum">
-
-            {{ sonuc.durum }}
-
-        </div>
-
-
-        <!-- KONTROLLER -->
-
-        <h3>
-            Kontrol Sonuçları
-        </h3>
-
-
-        {% for kontrol in sonuc.kontroller %}
-
-
-        <div class="kontrol">
-
-
-            {% if kontrol.durum == "ok" %}
-
-                ✅ {{ kontrol.metin }}
-
-            {% else %}
-
-                ❌ {{ kontrol.metin }}
-
-            {% endif %}
-
-
-        </div>
-
-
-        {% endfor %}
-
-
-        <!-- ÖNERİLER -->
-
-        <h3>
-            Geliştirme Önerileri
-        </h3>
-
-
-        {% if sonuc.oneriler %}
-
-
-            {% for oneri in sonuc.oneriler %}
-
-
-            <div class="oneri">
-
-                → {{ oneri }}
-
-            </div>
-
-
-            {% endfor %}
-
-
-        {% else %}
-
-
-            <div class="oneri">
-
-                Temel kontrollerde sorun bulunmadı.
-
-            </div>
-
 
         {% endif %}
 
 
-        <!-- PDF -->
+        <form method="POST">
+
+            <div class="form-grid">
+
+
+                <div class="field">
+
+                    <label>
+                        İşletme Adı
+                    </label>
+
+                    <input
+                        type="text"
+                        name="business_name"
+                        placeholder="Örn: Yalav Elektrik"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Sektör
+                    </label>
+
+                    <input
+                        type="text"
+                        name="sector"
+                        placeholder="Örn: Elektrikçi"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Şehir
+                    </label>
+
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Örn: İstanbul"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field">
+
+                    <label>
+                        Web Sitesi
+                    </label>
+
+                    <input
+                        type="text"
+                        name="website"
+                        placeholder="www.ornek.com"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="field full">
+
+                    <button
+                        class="primary"
+                        type="submit"
+                    >
+                        WEB SİTESİNİ ANALİZ ET
+                    </button>
+
+                </div>
+
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    {% if sonuc %}
+
+
+    <div class="card">
+
+
+        <div class="result-header">
+
+
+            <div>
+
+                <h2>
+                    {{ sonuc.business_name }}
+                </h2>
+
+                <p>
+                    {{ sonuc.sector }}
+                    ·
+                    {{ sonuc.city }}
+                </p>
+
+                <p>
+                    {{ sonuc.website }}
+                </p>
+
+                <span class="status">
+                    {{ sonuc.status }}
+                </span>
+
+            </div>
+
+
+            <div class="score">
+
+                <strong>
+                    {{ sonuc.score }}
+                </strong>
+
+                <span>
+                    / 100
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="metrics">
+
+
+            <div class="metric">
+
+                SEO
+
+                <strong>
+                    {{ sonuc.scores.seo }}
+                </strong>
+
+                <div class="progress">
+
+                    <div
+                        style="width: {{ sonuc.scores.seo }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                Teknik
+
+                <strong>
+                    {{ sonuc.scores.technical }}
+                </strong>
+
+                <div class="progress">
+
+                    <div
+                        style="width: {{ sonuc.scores.technical }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                Local SEO
+
+                <strong>
+                    {{ sonuc.scores.local }}
+                </strong>
+
+                <div class="progress">
+
+                    <div
+                        style="width: {{ sonuc.scores.local }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                İletişim
+
+                <strong>
+                    {{ sonuc.scores.communication }}
+                </strong>
+
+                <div class="progress">
+
+                    <div
+                        style="width: {{ sonuc.scores.communication }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="metric">
+
+                İçerik
+
+                <strong>
+                    {{ sonuc.scores.content }}
+                </strong>
+
+                <div class="progress">
+
+                    <div
+                        style="width: {{ sonuc.scores.content }}%"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Kontrol Sonuçları
+        </h2>
+
+
+        <div class="checks">
+
+
+            {% for control in sonuc.controls %}
+
+            <div class="check">
+
+                {% if control.success %}
+
+                <span class="ok">
+                    ✓
+                </span>
+
+                {% else %}
+
+                <span class="bad">
+                    ✕
+                </span>
+
+                {% endif %}
+
+
+                <div>
+
+                    <strong>
+                        {{ control.name }}
+                    </strong>
+
+                    <div>
+                        {{ control.detail }}
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Geliştirme Önerileri
+        </h2>
+
+
+        {% for item in sonuc.recommendations %}
+
+        <div class="recommendation">
+
+            → {{ item }}
+
+        </div>
+
+        {% endfor %}
+
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>
+            Hazır SEO Metinleri
+        </h2>
+
+
+        <div class="seo-box">
+
+            <div class="seo-label">
+                ÖNERİLEN TITLE
+            </div>
+
+            {{ sonuc.seo_texts.title }}
+
+        </div>
+
+
+        <div class="seo-box">
+
+            <div class="seo-label">
+                ÖNERİLEN H1
+            </div>
+
+            {{ sonuc.seo_texts.h1 }}
+
+        </div>
+
+
+        <div class="seo-box">
+
+            <div class="seo-label">
+                ÖNERİLEN META DESCRIPTION
+            </div>
+
+            {{ sonuc.seo_texts.meta }}
+
+        </div>
+
+
+        <div class="seo-box">
+
+            <div class="seo-label">
+                LOCAL SEO METNİ
+            </div>
+
+            {{ sonuc.seo_texts.local }}
+
+        </div>
+
+
+        <div class="seo-box">
+
+            <div class="seo-label">
+                WHATSAPP MESAJI
+            </div>
+
+            {{ sonuc.seo_texts.whatsapp }}
+
+        </div>
+
 
         <form
             method="POST"
             action="/pdf"
         >
 
+            <input
+                type="hidden"
+                name="business_name"
+                value="{{ sonuc.business_name }}"
+            >
 
             <input
                 type="hidden"
-                name="isletme_adi"
-                value="{{ sonuc.isletme_adi }}"
+                name="sector"
+                value="{{ sonuc.sector }}"
             >
-
 
             <input
                 type="hidden"
-                name="sektor"
-                value="{{ sonuc.sektor }}"
+                name="city"
+                value="{{ sonuc.city }}"
             >
-
-
-            <input
-                type="hidden"
-                name="sehir"
-                value="{{ sonuc.sehir }}"
-            >
-
 
             <input
                 type="hidden"
                 name="website"
-                value="{{ sonuc.url }}"
+                value="{{ sonuc.website }}"
             >
-
 
             <button
-                type="submit"
                 class="pdf-button"
+                type="submit"
             >
-
-                PDF RAPORU OLUŞTUR
-
+                PDF RAPORUNU OLUŞTUR
             </button>
 
-
         </form>
-
-
-        {% else %}
-
-
-        <div class="hata">
-
-            {{ sonuc.durum }}
-
-
-            {% if sonuc.hata %}
-
-                <br><br>
-
-                {{ sonuc.hata }}
-
-            {% endif %}
-
-        </div>
-
-
-        {% endif %}
 
 
     </div>
 
 
     {% endif %}
+
+
+    <div class="footer">
+
+        LocalAI Website Audit ·
+        Otomatik Web Analiz Sistemi
+
+    </div>
 
 
 </div>

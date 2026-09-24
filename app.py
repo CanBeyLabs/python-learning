@@ -1,90 +1,172 @@
-from flask import Flask, render_template, request, send_file
+from flask import (
+    Flask,
+    render_template,
+    request,
+    send_file
+)
 
-from audit import website_analiz_et
+from audit import audit_website
+from pdf_rapor import create_pdf
 
-from pdf_generator import pdf_olustur
+import os
 
 
-app = Flask("localai")
+app = Flask(__name__)
 
 
 @app.route("/", methods=["GET", "POST"])
-def ana_sayfa():
+def index():
 
     sonuc = None
+    hata = None
 
     if request.method == "POST":
 
-        isletme_adi = request.form.get(
-            "isletme_adi"
-        )
+        business_name = request.form.get(
+            "business_name",
+            ""
+        ).strip()
 
-        sektor = request.form.get(
-            "sektor"
-        )
+        sector = request.form.get(
+            "sector",
+            ""
+        ).strip()
 
-        sehir = request.form.get(
-            "sehir"
-        )
+        city = request.form.get(
+            "city",
+            ""
+        ).strip()
 
         website = request.form.get(
-            "website"
-        )
+            "website",
+            ""
+        ).strip()
 
-        sonuc = website_analiz_et(
-            website
-        )
+        if not business_name:
+            hata = "İşletme adı zorunludur."
 
-        sonuc["isletme_adi"] = isletme_adi
-        sonuc["sektor"] = sektor
-        sonuc["sehir"] = sehir
+        elif not sector:
+            hata = "Sektör zorunludur."
+
+        elif not city:
+            hata = "Şehir zorunludur."
+
+        elif not website:
+            hata = "Web sitesi zorunludur."
+
+        else:
+
+            sonuc = audit_website(
+                website,
+                business_name,
+                sector,
+                city
+            )
+
+            if not sonuc.get("success"):
+                hata = sonuc.get(
+                    "error",
+                    "Analiz sırasında hata oluştu."
+                )
+
+                sonuc = None
 
     return render_template(
         "index.html",
-        sonuc=sonuc
+        sonuc=sonuc,
+        hata=hata
     )
 
 
-@app.route(
-    "/pdf",
-    methods=["POST"]
-)
+@app.route("/pdf", methods=["POST"])
 def pdf():
 
-    isletme_adi = request.form.get(
-        "isletme_adi"
-    )
+    business_name = request.form.get(
+        "business_name",
+        ""
+    ).strip()
 
-    sektor = request.form.get(
-        "sektor"
-    )
+    sector = request.form.get(
+        "sector",
+        ""
+    ).strip()
 
-    sehir = request.form.get(
-        "sehir"
-    )
+    city = request.form.get(
+        "city",
+        ""
+    ).strip()
 
     website = request.form.get(
-        "website"
+        "website",
+        ""
+    ).strip()
+
+    sonuc = audit_website(
+        website,
+        business_name,
+        sector,
+        city
     )
 
-    sonuc = website_analiz_et(
-        website
+    if not sonuc.get("success"):
+
+        return (
+            sonuc.get(
+                "error",
+                "PDF oluşturulamadı."
+            ),
+            400
+        )
+
+    try:
+
+        pdf_path = create_pdf(
+            sonuc
+        )
+
+        if os.path.exists(pdf_path):
+
+            return send_file(
+                pdf_path,
+                as_attachment=True,
+                download_name=(
+                    "website_audit_raporu.pdf"
+                )
+            )
+
+    except Exception as hata:
+
+        print(
+            "PDF HATASI:",
+            hata
+        )
+
+        return (
+            "PDF oluşturulurken hata oluştu: "
+            + str(hata),
+            500
+        )
+
+    return (
+        "PDF dosyası oluşturulamadı.",
+        500
     )
 
-    sonuc["isletme_adi"] = isletme_adi
-    sonuc["sektor"] = sektor
-    sonuc["sehir"] = sehir
 
-    pdf_yolu = pdf_olustur(
-        sonuc
+@app.route("/health")
+def health():
+
+    return {
+        "status": "ok",
+        "service": "LocalAI Website Audit",
+        "version": "2.0"
+    }
+
+
+if __name__ == "__main__":
+
+    app.run(
+        host="127.0.0.1",
+        port=5000,
+        debug=True
     )
-
-    return send_file(
-        pdf_yolu,
-        as_attachment=True
-    )
-
-
-app.run(
-    debug=True
-)

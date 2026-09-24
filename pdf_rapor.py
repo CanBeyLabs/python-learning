@@ -1,529 +1,656 @@
-import re
-
-from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import mm
 from reportlab.platypus import (
     SimpleDocTemplate,
     Paragraph,
     Spacer,
     Table,
     TableStyle,
-    HRFlowable
+    PageBreak
+)
+from reportlab.pdfbase.ttfonts import TTFont
+from reportlab.pdfbase import pdfmetrics
+
+import os
+
+
+REPORT_DIR = "raporlar"
+
+os.makedirs(
+    REPORT_DIR,
+    exist_ok=True
 )
 
 
-# ==========================================
-# DOSYA AYARLARI
-# ==========================================
+def create_pdf(result):
 
-TXT_DOSYASI = "website_raporu.txt"
-PDF_DOSYASI = "website_audit_raporu.pdf"
-
-
-# ==========================================
-# RAPORU OKU
-# ==========================================
-
-with open(
-    TXT_DOSYASI,
-    "r",
-    encoding="utf-8"
-) as dosya:
-
-    rapor = dosya.read()
-
-
-# ==========================================
-# BILGILERI BUL
-# ==========================================
-
-website = "Bilinmiyor"
-puan = 0
-durum = "Bilinmiyor"
-
-website_eslesme = re.search(
-    r"Website:\s*(.+)",
-    rapor
-)
-
-if website_eslesme:
-
-    website = website_eslesme.group(1).strip()
-
-
-puan_eslesme = re.search(
-    r"Puan:\s*(\d+)\s*/\s*100",
-    rapor
-)
-
-if puan_eslesme:
-
-    puan = int(puan_eslesme.group(1))
-
-
-durum_eslesme = re.search(
-    r"Durum:\s*(.+)",
-    rapor
-)
-
-if durum_eslesme:
-
-    durum = durum_eslesme.group(1).strip()
-
-
-# ==========================================
-# PDF AYARLARI
-# ==========================================
-
-document = SimpleDocTemplate(
-    PDF_DOSYASI,
-    pagesize=A4,
-    rightMargin=18 * mm,
-    leftMargin=18 * mm,
-    topMargin=18 * mm,
-    bottomMargin=18 * mm
-)
-
-
-styles = getSampleStyleSheet()
-
-
-baslik = ParagraphStyle(
-    "Baslik",
-    parent=styles["Title"],
-    fontSize=24,
-    leading=28,
-    alignment=TA_CENTER,
-    spaceAfter=8
-)
-
-
-alt_baslik = ParagraphStyle(
-    "AltBaslik",
-    parent=styles["Heading2"],
-    fontSize=14,
-    leading=18,
-    spaceBefore=10,
-    spaceAfter=8
-)
-
-
-normal = ParagraphStyle(
-    "Normal",
-    parent=styles["BodyText"],
-    fontSize=10,
-    leading=15
-)
-
-
-buyuk_puan = ParagraphStyle(
-    "BuyukPuan",
-    parent=styles["Title"],
-    fontSize=32,
-    leading=36,
-    alignment=TA_CENTER,
-    spaceAfter=5
-)
-
-
-kucuk = ParagraphStyle(
-    "Kucuk",
-    parent=styles["BodyText"],
-    fontSize=9,
-    leading=12
-)
-
-
-# ==========================================
-# PDF ICERIGI
-# ==========================================
-
-icerik = []
-
-
-# BASLIK
-
-icerik.append(
-    Paragraph(
-        "LOCALAI WEBSITE AUDIT",
-        baslik
+    file_path = os.path.join(
+        REPORT_DIR,
+        "website_audit_raporu.pdf"
     )
-)
 
-
-icerik.append(
-    Paragraph(
-        "Dijital Gorunurluk ve Website Analiz Raporu",
-        ParagraphStyle(
-            "Alt",
-            parent=normal,
-            alignment=TA_CENTER,
-            fontSize=11
-        )
+    font_path = (
+        "C:/Windows/Fonts/arial.ttf"
     )
-)
 
-
-icerik.append(
-    Spacer(1, 12)
-)
-
-
-icerik.append(
-    HRFlowable(
-        width="100%",
-        thickness=1,
-        color=colors.grey
+    bold_font_path = (
+        "C:/Windows/Fonts/arialbd.ttf"
     )
-)
 
+    if os.path.exists(font_path):
 
-icerik.append(
-    Spacer(1, 15)
-)
-
-
-# WEBSITE BILGISI
-
-icerik.append(
-    Paragraph(
-        "Website",
-        alt_baslik
-    )
-)
-
-
-icerik.append(
-    Paragraph(
-        website,
-        normal
-    )
-)
-
-
-icerik.append(
-    Spacer(1, 12)
-)
-
-
-# ==========================================
-# PUAN KUTUSU
-# ==========================================
-
-puan_tablosu = Table(
-    [
-        [
-            Paragraph(
-                f"{puan} / 100",
-                buyuk_puan
+        pdfmetrics.registerFont(
+            TTFont(
+                "Arial",
+                font_path
             )
-        ],
-        [
-            Paragraph(
-                f"Durum: {durum}",
-                ParagraphStyle(
-                    "Durum",
-                    parent=normal,
-                    alignment=TA_CENTER,
-                    fontSize=12
+        )
+
+        if os.path.exists(
+            bold_font_path
+        ):
+
+            pdfmetrics.registerFont(
+                TTFont(
+                    "ArialBold",
+                    bold_font_path
                 )
             )
-        ]
-    ],
-    colWidths=[160 * mm]
-)
+
+            normal_font = "Arial"
+            bold_font = "ArialBold"
+
+        else:
+
+            normal_font = "Arial"
+            bold_font = "Arial"
+
+    else:
+
+        normal_font = "Helvetica"
+        bold_font = "Helvetica-Bold"
 
 
-puan_tablosu.setStyle(
-    TableStyle(
-        [
-            (
-                "BOX",
-                (0, 0),
-                (-1, -1),
-                1,
-                colors.grey
-            ),
+    styles = getSampleStyleSheet()
+
+    title_style = styles["Title"]
+
+    title_style.fontName = bold_font
+    title_style.alignment = TA_CENTER
+    title_style.fontSize = 22
+
+    heading_style = styles["Heading2"]
+    heading_style.fontName = bold_font
+
+    body_style = styles["BodyText"]
+    body_style.fontName = normal_font
+    body_style.fontSize = 10
+    body_style.leading = 14
+
+
+    doc = SimpleDocTemplate(
+        file_path,
+        pagesize=A4,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=40,
+        bottomMargin=40
+    )
+
+
+    story = []
+
+
+    story.append(
+        Paragraph(
+            "LocalAI Website Audit",
+            title_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 15)
+    )
+
+
+    story.append(
+        Paragraph(
+            "Profesyonel Web Sitesi Analiz Raporu",
+            heading_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 10)
+    )
+
+
+    business = result.get(
+        "business_name",
+        "İşletme"
+    )
+
+    sector = result.get(
+        "sector",
+        ""
+    )
+
+    city = result.get(
+        "city",
+        ""
+    )
+
+    website = result.get(
+        "website",
+        ""
+    )
+
+    score = result.get(
+        "score",
+        0
+    )
+
+    status = result.get(
+        "status",
+        ""
+    )
+
+
+    info_data = [
+
+        ["İşletme", business],
+
+        ["Sektör", sector],
+
+        ["Şehir", city],
+
+        ["Web Sitesi", website],
+
+        ["Genel Puan", f"{score}/100"],
+
+        ["Durum", status]
+
+    ]
+
+
+    info_table = Table(
+        info_data,
+        colWidths=[120, 350]
+    )
+
+
+    info_table.setStyle(
+        TableStyle([
+
             (
                 "BACKGROUND",
                 (0, 0),
-                (-1, -1),
-                colors.whitesmoke
+                (0, -1),
+                colors.HexColor(
+                    "#eeeeee"
+                )
             ),
+
+            (
+                "FONTNAME",
+                (0, 0),
+                (-1, -1),
+                normal_font
+            ),
+
+            (
+                "FONTNAME",
+                (0, 0),
+                (0, -1),
+                bold_font
+            ),
+
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                0.5,
+                colors.grey
+            ),
+
             (
                 "VALIGN",
                 (0, 0),
                 (-1, -1),
-                "MIDDLE"
+                "TOP"
             ),
+
             (
-                "TOPPADDING",
+                "PADDING",
                 (0, 0),
                 (-1, -1),
-                12
-            ),
-            (
-                "BOTTOMPADDING",
-                (0, 0),
-                (-1, -1),
-                12
+                7
             )
+
+        ])
+    )
+
+
+    story.append(
+        info_table
+    )
+
+    story.append(
+        Spacer(1, 20)
+    )
+
+
+    story.append(
+        Paragraph(
+            "Kategori Puanları",
+            heading_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 10)
+    )
+
+
+    scores = result.get(
+        "scores",
+        {}
+    )
+
+
+    score_data = [
+
+        ["Kategori", "Puan"],
+
+        ["SEO", f"{scores.get('seo', 0)}/100"],
+
+        [
+            "Teknik SEO",
+            f"{scores.get('technical', 0)}/100"
+        ],
+
+        [
+            "Local SEO",
+            f"{scores.get('local', 0)}/100"
+        ],
+
+        [
+            "İletişim",
+            f"{scores.get('communication', 0)}/100"
+        ],
+
+        [
+            "İçerik",
+            f"{scores.get('content', 0)}/100"
         ]
-    )
-)
 
-
-icerik.append(puan_tablosu)
-
-
-icerik.append(
-    Spacer(1, 18)
-)
-
-
-# ==========================================
-# KONTROLLER
-# ==========================================
-
-icerik.append(
-    Paragraph(
-        "Kontrol Sonuclari",
-        alt_baslik
-    )
-)
-
-
-kontrol_satirlari = []
-
-
-kontrol_basladi = False
-
-
-for satir in rapor.split("\n"):
-
-    satir = satir.strip()
-
-
-    if satir == "KONTROLLER":
-
-        kontrol_basladi = True
-        continue
-
-
-    if satir == "GELISTIRME ONERILERI":
-
-        kontrol_basladi = False
-        continue
-
-
-    if kontrol_basladi and satir:
-
-        if satir.startswith("[OK]"):
-
-            kontrol_satirlari.append(
-                [
-                    "OK",
-                    satir.replace("[OK]", "").strip()
-                ]
-            )
-
-        elif satir.startswith("[X]"):
-
-            kontrol_satirlari.append(
-                [
-                    "EKSIK",
-                    satir.replace("[X]", "").strip()
-                ]
-            )
-
-
-if kontrol_satirlari:
-
-    tablo_verisi = [
-        ["Durum", "Kontrol"]
     ]
 
-    tablo_verisi.extend(kontrol_satirlari)
 
-
-    kontrol_tablosu = Table(
-        tablo_verisi,
-        colWidths=[
-            30 * mm,
-            130 * mm
-        ]
+    score_table = Table(
+        score_data,
+        colWidths=[300, 170]
     )
 
 
-    kontrol_tablosu.setStyle(
-        TableStyle(
-            [
-                (
-                    "BACKGROUND",
-                    (0, 0),
-                    (-1, 0),
-                    colors.lightgrey
-                ),
-                (
-                    "TEXTCOLOR",
-                    (0, 0),
-                    (-1, 0),
-                    colors.black
-                ),
-                (
-                    "FONTNAME",
-                    (0, 0),
-                    (-1, 0),
-                    "Helvetica-Bold"
-                ),
-                (
-                    "GRID",
-                    (0, 0),
-                    (-1, -1),
-                    0.5,
-                    colors.grey
-                ),
-                (
-                    "VALIGN",
-                    (0, 0),
-                    (-1, -1),
-                    "MIDDLE"
-                ),
-                (
-                    "TOPPADDING",
-                    (0, 0),
-                    (-1, -1),
-                    7
-                ),
-                (
-                    "BOTTOMPADDING",
-                    (0, 0),
-                    (-1, -1),
-                    7
+    score_table.setStyle(
+        TableStyle([
+
+            (
+                "BACKGROUND",
+                (0, 0),
+                (-1, 0),
+                colors.HexColor(
+                    "#222222"
                 )
+            ),
+
+            (
+                "TEXTCOLOR",
+                (0, 0),
+                (-1, 0),
+                colors.white
+            ),
+
+            (
+                "FONTNAME",
+                (0, 0),
+                (-1, 0),
+                bold_font
+            ),
+
+            (
+                "FONTNAME",
+                (0, 1),
+                (-1, -1),
+                normal_font
+            ),
+
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                0.5,
+                colors.grey
+            ),
+
+            (
+                "PADDING",
+                (0, 0),
+                (-1, -1),
+                8
+            )
+
+        ])
+    )
+
+
+    story.append(
+        score_table
+    )
+
+
+    story.append(
+        PageBreak()
+    )
+
+
+    story.append(
+        Paragraph(
+            "Kontrol Sonuçları",
+            heading_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 10)
+    )
+
+
+    controls = result.get(
+        "controls",
+        []
+    )
+
+
+    control_data = [
+        ["Kontrol", "Sonuç"]
+    ]
+
+
+    for control in controls:
+
+        symbol = (
+            "✓"
+            if control["success"]
+            else "X"
+        )
+
+        control_data.append(
+            [
+                control["name"],
+                f"{symbol} {control['detail']}"
             ]
         )
+
+
+    control_table = Table(
+        control_data,
+        colWidths=[140, 330]
     )
 
 
-    icerik.append(kontrol_tablosu)
+    control_table.setStyle(
+        TableStyle([
 
+            (
+                "BACKGROUND",
+                (0, 0),
+                (-1, 0),
+                colors.HexColor(
+                    "#222222"
+                )
+            ),
 
-icerik.append(
-    Spacer(1, 18)
-)
+            (
+                "TEXTCOLOR",
+                (0, 0),
+                (-1, 0),
+                colors.white
+            ),
 
+            (
+                "FONTNAME",
+                (0, 0),
+                (-1, 0),
+                bold_font
+            ),
 
-# ==========================================
-# ONERILER
-# ==========================================
+            (
+                "FONTNAME",
+                (0, 1),
+                (-1, -1),
+                normal_font
+            ),
 
-icerik.append(
-    Paragraph(
-        "Gelisitirme Onerileri",
-        alt_baslik
-    )
-)
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                0.5,
+                colors.grey
+            ),
 
+            (
+                "VALIGN",
+                (0, 0),
+                (-1, -1),
+                "TOP"
+            ),
 
-oneri_basladi = False
-
-
-oneri_listesi = []
-
-
-for satir in rapor.split("\n"):
-
-    satir = satir.strip()
-
-
-    if satir == "GELISTIRME ONERILERI":
-
-        oneri_basladi = True
-        continue
-
-
-    if oneri_basladi and satir:
-
-        if satir.startswith("->"):
-
-            oneri_listesi.append(
-                satir.replace("->", "").strip()
+            (
+                "PADDING",
+                (0, 0),
+                (-1, -1),
+                7
             )
 
+        ])
+    )
 
-if oneri_listesi:
 
-    for sira, oneri in enumerate(
-        oneri_listesi,
-        start=1
-    ):
+    story.append(
+        control_table
+    )
 
-        icerik.append(
+
+    story.append(
+        Spacer(1, 20)
+    )
+
+
+    story.append(
+        Paragraph(
+            "Geliştirme Önerileri",
+            heading_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 10)
+    )
+
+
+    recommendations = result.get(
+        "recommendations",
+        []
+    )
+
+
+    for recommendation in recommendations:
+
+        story.append(
             Paragraph(
-                f"{sira}. {oneri}",
-                normal
+                "• " + recommendation,
+                body_style
             )
         )
 
-        icerik.append(
+        story.append(
             Spacer(1, 5)
         )
 
-else:
 
-    icerik.append(
+    story.append(
+        PageBreak()
+    )
+
+
+    story.append(
         Paragraph(
-            "Temel kontrollerde sorun bulunmadi.",
-            normal
+            "Hazır SEO Metinleri",
+            heading_style
+        )
+    )
+
+    story.append(
+        Spacer(1, 10)
+    )
+
+
+    seo_texts = result.get(
+        "seo_texts",
+        {}
+    )
+
+
+    seo_data = [
+
+        [
+            "TITLE",
+            seo_texts.get(
+                "title",
+                ""
+            )
+        ],
+
+        [
+            "H1",
+            seo_texts.get(
+                "h1",
+                ""
+            )
+        ],
+
+        [
+            "META DESCRIPTION",
+            seo_texts.get(
+                "meta",
+                ""
+            )
+        ],
+
+        [
+            "LOCAL SEO",
+            seo_texts.get(
+                "local",
+                ""
+            )
+        ],
+
+        [
+            "WHATSAPP",
+            seo_texts.get(
+                "whatsapp",
+                ""
+            )
+        ]
+
+    ]
+
+
+    seo_table = Table(
+        seo_data,
+        colWidths=[130, 340]
+    )
+
+
+    seo_table.setStyle(
+        TableStyle([
+
+            (
+                "BACKGROUND",
+                (0, 0),
+                (0, -1),
+                colors.HexColor(
+                    "#eeeeee"
+                )
+            ),
+
+            (
+                "FONTNAME",
+                (0, 0),
+                (0, -1),
+                bold_font
+            ),
+
+            (
+                "FONTNAME",
+                (1, 0),
+                (1, -1),
+                normal_font
+            ),
+
+            (
+                "GRID",
+                (0, 0),
+                (-1, -1),
+                0.5,
+                colors.grey
+            ),
+
+            (
+                "VALIGN",
+                (0, 0),
+                (-1, -1),
+                "TOP"
+            ),
+
+            (
+                "PADDING",
+                (0, 0),
+                (-1, -1),
+                8
+            )
+
+        ])
+    )
+
+
+    story.append(
+        seo_table
+    )
+
+
+    story.append(
+        Spacer(1, 25)
+    )
+
+
+    story.append(
+        Paragraph(
+            "Bu rapor LocalAI Website Audit "
+            "tarafından otomatik olarak oluşturulmuştur.",
+            body_style
         )
     )
 
 
-# ==========================================
-# ALT BILGI
-# ==========================================
-
-icerik.append(
-    Spacer(1, 25)
-)
-
-
-icerik.append(
-    HRFlowable(
-        width="100%",
-        thickness=0.5,
-        color=colors.grey
+    doc.build(
+        story
     )
-)
 
 
-icerik.append(
-    Spacer(1, 8)
-)
-
-
-icerik.append(
-    Paragraph(
-        "Bu rapor otomatik website analiz sistemi tarafindan olusturulmustur.",
-        kucuk
-    )
-)
-
-
-# ==========================================
-# PDF OLUSTUR
-# ==========================================
-
-document.build(icerik)
-
-
-print("\n================================")
-print("       PROFESYONEL PDF")
-print("================================")
-
-print("PDF olusturuldu:")
-print(PDF_DOSYASI)
+    return file_path
