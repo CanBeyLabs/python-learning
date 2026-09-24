@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+
+<html lang="tr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        LocalAI Website Audit
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f4f6f8;
+
+            color: #111827;
+        }
+
+
+        .container {
+
+            width: 92%;
+
+            max-width: 800px;
+
+            margin: 50px auto;
+
+            background: white;
+
+            padding: 40px;
+
+            border-radius: 18px;
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.08);
+        }
+
+
+        h1 {
+
+            text-align: center;
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .aciklama {
+
+            text-align: center;
+
+            color: #6b7280;
+
+            margin-bottom: 35px;
+        }
+
+
+        label {
+
+            display: block;
+
+            font-weight: bold;
+
+            margin-top: 18px;
+
+            margin-bottom: 7px;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border:
+                1px solid #d1d5db;
+
+            border-radius: 9px;
+
+            font-size: 15px;
+        }
+
+
+        input:focus {
+
+            outline: none;
+
+            border-color: #111827;
+        }
+
+
+        button {
+
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 9px;
+
+            background: #111827;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+
+        button:hover {
+
+            background: #000000;
+        }
+
+
+        .sonuc {
+
+            margin-top: 35px;
+
+            padding: 25px;
+
+            background: #f9fafb;
+
+            border-radius: 14px;
+
+            border:
+                1px solid #e5e7eb;
+        }
+
+
+        .puan {
+
+            text-align: center;
+
+            font-size: 52px;
+
+            font-weight: bold;
+
+            margin: 25px 0;
+        }
+
+
+        .durum {
+
+            text-align: center;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            margin-bottom: 25px;
+        }
+
+
+        .bilgi {
+
+            padding: 18px;
+
+            background: white;
+
+            border-radius: 10px;
+
+            margin-bottom: 25px;
+
+            line-height: 1.6;
+        }
+
+
+        .kontrol {
+
+            padding: 12px;
+
+            margin: 7px 0;
+
+            background: white;
+
+            border-radius: 7px;
+
+            border:
+                1px solid #e5e7eb;
+        }
+
+
+        .oneri {
+
+            padding: 13px;
+
+            margin: 7px 0;
+
+            background: white;
+
+            border-radius: 7px;
+
+            border-left:
+                4px solid #111827;
+        }
+
+
+        .pdf-button {
+
+            background: #2563eb;
+
+            margin-top: 30px;
+        }
+
+
+        .pdf-button:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        .hata {
+
+            padding: 15px;
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+            border-radius: 10px;
+
+            margin-top: 20px;
+        }
+
+
+        h2 {
+
+            margin-top: 0;
+        }
+
+
+        h3 {
+
+            margin-top: 25px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>
+        LocalAI Website Audit
+    </h1>
+
+
+    <p class="aciklama">
+        İşletmenizin web sitesini analiz edin.
+    </p>
+
+
+    <!-- ANALİZ FORMU -->
+
+    <form method="POST">
+
+
+        <label>
+            İşletme Adı
+        </label>
+
+
+        <input
+            type="text"
+            name="isletme_adi"
+            placeholder="Örn: Yalav Elektrik"
+            required
+        >
+
+
+        <label>
+            Sektör
+        </label>
+
+
+        <input
+            type="text"
+            name="sektor"
+            placeholder="Örn: Elektrikçi"
+            required
+        >
+
+
+        <label>
+            Şehir
+        </label>
+
+
+        <input
+            type="text"
+            name="sehir"
+            placeholder="Örn: İstanbul"
+            required
+        >
+
+
+        <label>
+            Web Sitesi
+        </label>
+
+
+        <input
+            type="text"
+            name="website"
+            placeholder="www.ornek.com"
+            required
+        >
+
+
+        <button type="submit">
+
+            WEBSITEYI ANALIZ ET
+
+        </button>
+
+
+    </form>
+
+
+    <!-- SONUÇ -->
+
+    {% if sonuc %}
+
+
+    <div class="sonuc">
+
+
+        <h2>
+            Analiz Sonucu
+        </h2>
+
+
+        <div class="bilgi">
+
+
+            <strong>
+                İşletme:
+            </strong>
+
+            {{ sonuc.isletme_adi }}
+
+
+            <br>
+
+
+            <strong>
+                Sektör:
+            </strong>
+
+            {{ sonuc.sektor }}
+
+
+            <br>
+
+
+            <strong>
+                Şehir:
+            </strong>
+
+            {{ sonuc.sehir }}
+
+
+            <br>
+
+
+            <strong>
+                Website:
+            </strong>
+
+            {{ sonuc.url }}
+
+
+        </div>
+
+
+        {% if sonuc.aktif %}
+
+
+        <!-- PUAN -->
+
+        <div class="puan">
+
+            {{ sonuc.puan }}/100
+
+        </div>
+
+
+        <div class="durum">
+
+            {{ sonuc.durum }}
+
+        </div>
+
+
+        <!-- KONTROLLER -->
+
+        <h3>
+            Kontrol Sonuçları
+        </h3>
+
+
+        {% for kontrol in sonuc.kontroller %}
+
+
+        <div class="kontrol">
+
+
+            {% if kontrol.durum == "ok" %}
+
+                ✅ {{ kontrol.metin }}
+
+            {% else %}
+
+                ❌ {{ kontrol.metin }}
+
+            {% endif %}
+
+
+        </div>
+
+
+        {% endfor %}
+
+
+        <!-- ÖNERİLER -->
+
+        <h3>
+            Geliştirme Önerileri
+        </h3>
+
+
+        {% if sonuc.oneriler %}
+
+
+            {% for oneri in sonuc.oneriler %}
+
+
+            <div class="oneri">
+
+                → {{ oneri }}
+
+            </div>
+
+
+            {% endfor %}
+
+
+        {% else %}
+
+
+            <div class="oneri">
+
+                Temel kontrollerde sorun bulunmadı.
+
+            </div>
+
+
+        {% endif %}
+
+
+        <!-- PDF -->
+
+        <form
+            method="POST"
+            action="/pdf"
+        >
+
+
+            <input
+                type="hidden"
+                name="isletme_adi"
+                value="{{ sonuc.isletme_adi }}"
+            >
+
+
+            <input
+                type="hidden"
+                name="sektor"
+                value="{{ sonuc.sektor }}"
+            >
+
+
+            <input
+                type="hidden"
+                name="sehir"
+                value="{{ sonuc.sehir }}"
+            >
+
+
+            <input
+                type="hidden"
+                name="website"
+                value="{{ sonuc.url }}"
+            >
+
+
+            <button
+                type="submit"
+                class="pdf-button"
+            >
+
+                PDF RAPORU OLUŞTUR
+
+            </button>
+
+
+        </form>
+
+
+        {% else %}
+
+
+        <div class="hata">
+
+            {{ sonuc.durum }}
+
+
+            {% if sonuc.hata %}
+
+                <br><br>
+
+                {{ sonuc.hata }}
+
+            {% endif %}
+
+        </div>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>

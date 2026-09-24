@@ -1,9 +1,11 @@
 import requests
 
+
 username = input("GitHub kullanıcı adı: ")
 
-url = f"https://api.github.com/users/{username}"
-response = requests.get(url)
+user_url = f"https://api.github.com/users/{username}"
+response = requests.get(user_url)
+
 
 if response.status_code == 200:
 
@@ -16,7 +18,7 @@ if response.status_code == 200:
     print("Public repo:", data["public_repos"])
     print("Profil:", data["html_url"])
 
-    repos_url = f"https://api.github.com/users/{username}/repos"
+    repos_url = f"https://api.github.com/users/{username}/repos?per_page=100"
     repos_response = requests.get(repos_url)
 
     if repos_response.status_code == 200:
@@ -25,12 +27,29 @@ if response.status_code == 200:
 
         print("\n===== REPOLAR =====")
 
+        toplam_yildiz = 0
+        toplam_fork = 0
+
         for repo in repos:
+
             print(
-                "-", repo["name"],
-                "| ⭐", repo["stargazers_count"],
-                "| Fork:", repo["forks_count"]
+                "-",
+                repo["name"],
+                "| ⭐",
+                repo["stargazers_count"],
+                "| Fork:",
+                repo["forks_count"]
             )
+
+            toplam_yildiz += repo["stargazers_count"]
+            toplam_fork += repo["forks_count"]
+
+        print("\n===== TOPLAM =====")
+        print("Toplam yıldız:", toplam_yildiz)
+        print("Toplam fork:", toplam_fork)
+
+    else:
+        print("Repolar alınamadı.")
 
 else:
     print("Kullanıcı bulunamadı.")

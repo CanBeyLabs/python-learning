@@ -1,0 +1,35 @@
+================================
+       LOCALAI WEBSITE AUDIT
+================================
+
+Isletme: Yalav Elektrik
+Sektor: Elektrikçi
+Sehir: İstanbul
+Website: https://www.yalavelektrik.com
+Durum kodu: 200
+Sayfa uzunlugu: 932
+
+SEO PUANI
+---------
+Puan: 60 / 100
+Durum: GELISTIRILMELI
+
+KONTROLLER
+----------
+[OK] Title bulundu
+[X] Meta description bulunamadi
+[OK] H1 bulundu
+[OK] HTTPS aktif
+[X] Telefon bilgisi bulunamadi
+[X] E-posta bilgisi bulunamadi
+[X] WhatsApp baglantisi bulunamadi
+[OK] robots.txt bulundu
+[OK] sitemap.xml bulundu
+[OK] Sayfada gorsel bulunmuyor
+
+GELISTIRME ONERILERI
+--------------------
+-> Meta description eklenmeli.
+-> Telefon bilgisi gorunur hale getirilmeli.
+-> E-posta adresi eklenmeli.
+-> WhatsApp iletisim baglantisi eklenebilir.
