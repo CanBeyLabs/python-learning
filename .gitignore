@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+raporlat/
+website_audit_raporu.pdf
